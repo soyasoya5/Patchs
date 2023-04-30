@@ -1,0 +1,49 @@
+From 4e6afecd60870fb4c4a6f636d7d98f7c9ab25e88 Mon Sep 17 00:00:00 2001
+From: soyasoya5 <18715978+soyasoya5@users.noreply.github.com>
+Date: Sun, 30 Apr 2023 19:12:09 +0800
+Subject: [PATCH] apply anti-anti-frida script to embed-agent.sh
+
+---
+ src/embed-agent.sh | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/src/embed-agent.sh b/src/embed-agent.sh
+index 6119b5e..1ae7bec 100755
+--- a/src/embed-agent.sh
++++ b/src/embed-agent.sh
+@@ -10,8 +10,8 @@ resource_compiler=$7
+ resource_config=$8
+ lipo=$9
+ 
++custom_script="$output_dir/../../../../src/anti-frida.py"
+ priv_dir="$output_dir/frida-agent@emb"
+-
+ mkdir -p "$priv_dir"
+ 
+ collect_generic_agent ()
+@@ -22,6 +22,11 @@ collect_generic_agent ()
+   else
+     touch "$embedded_agent"
+   fi
++  
++  if [ -f "$custom_script" ]; then
++    python3 "$custom_script" "$embedded_agent"
++  fi
++  
+   embedded_agents+=("$embedded_agent")
+ }
+ 
+@@ -53,6 +58,10 @@ case $host_os in
+       echo "An agent must be provided"
+       exit 1
+     fi
++    
++    if [ -f "$custom_script" ]; then
++      python3 "$custom_script" "$embedded_agent"
++    fi
+ 
+     exec "$resource_compiler" --toolchain=gnu -c "$resource_config" -o "$output_dir/frida-data-agent" "$embedded_agent"
+     ;;
+-- 
+2.39.2 (Apple Git-143)
+
