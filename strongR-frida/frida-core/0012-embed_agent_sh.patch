@@ -15,7 +15,7 @@ index 6119b5e..1ae7bec 100755
  resource_config=$8
  lipo=$9
  
-+custom_script="$output_dir/../../../../src/anti-frida.py"
++custom_script="$output_dir/../../../../frida-core/src/anti-frida.py"
  priv_dir="$output_dir/frida-agent@emb"
 -
  mkdir -p "$priv_dir"
